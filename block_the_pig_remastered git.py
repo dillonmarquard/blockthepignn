@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[10]:
 
 
 from PIL import Image
@@ -30,7 +30,7 @@ import math
 import time
 
 
-# In[ ]:
+# In[11]:
 
 
 class Game():
@@ -232,7 +232,7 @@ class Game():
         # self.printArr(self.gameBoard)
 
 
-# In[ ]:
+# In[12]:
 
 
 class Models:
@@ -306,7 +306,7 @@ class Models:
         return Models(model=mom)#.mutate(self.mutationRate)
 
 
-# In[ ]:
+# In[13]:
 
 
 class Population:
@@ -357,7 +357,7 @@ class Population:
             #for x in range(modelsSize//5):
             #    self.Models[x] = self.Models[x].mutate(25)
             
-            for each in self.Models: # possible threading
+            for each in self.Models: # possible threading was tested but resulted in array memory errors and generally not good stuff
                 #if each.fitness == None:
                 game.play(each)
             self.bubbleSort()
@@ -380,8 +380,7 @@ class Population:
             #    if each.fitness == None:
             #        game.play(each)
             #self.bubbleSort()
-            if epoch % 25 == 0 and epoch != 0:
-                trainAgainstStone()
+            trainAgainstStone()
             if epoch % 100 == 0 and epoch != 0:
                 clear_output()
                 
@@ -396,7 +395,7 @@ class Population:
         self.saveModels(numToSave=modelsSize)
 
 
-# In[ ]:
+# In[14]:
 
 
 def outPutArrayGen(gameBoard):
@@ -413,29 +412,30 @@ def outPutArrayGen(gameBoard):
     return outarr
 
 
-# In[ ]:
+# In[15]:
 
 
 #train to not click on stone
 def trainAgainstStone():
-    for x in range(200):
+    print("training against stone")
+    for x in range(100):
         for each in population.Models:
             game.generateGameBoard(random.randint(0,15))
             outputarr = outPutArrayGen(game.gameBoard)
             outputarr = np.array([outputarr])
             each.model.train_on_batch(game.input, outputarr, sample_weight=None, class_weight=None)
-        clear_output()
-        print(x)
-    population.saveModels(numToSave=len(population.Models))
+        #clear_output()
+        #print(x)
+    #population.saveModels(numToSave=len(population.Models))
 
 
 # In[ ]:
 
 
-with tf.device('/gpu:0'):
+with tf.device('/gpu:0'): # can be changed to cpu but will drastically decrease performance
     game = Game()
     population = Population()
-    population.loadModels(numToLoad=15)
+    population.loadModels(numToLoad=50)
     #population.Populate(50)
     #trainAgainstStone()
     population.bubbleSort()
@@ -496,11 +496,12 @@ with tf.device('/gpu:0'):
 # In[ ]:
 
 
-pygame.init()
-screen_width=300
-screen_height=580
-screen=pygame.display.set_mode([screen_width,screen_height])
-pygame.display.init()
+# uncomment if training manually
+#pygame.init()
+#screen_width=300
+#screen_height=580
+#screen=pygame.display.set_mode([screen_width,screen_height])
+#pygame.display.init()
 def SetCirclePostions():
     Positions = []
     for y in range(11):
@@ -548,7 +549,7 @@ def PlayGame():
     while True:
         population.Models[0].inputlist = []
         population.Models[0].outputlist = []
-        game.generateGameBoard(population.Models[0].level)
+        game.generateGameBoard(random.randint(0,5))
         game.separateGameBoard()
         botpredictionloc = population.Models[0].getPrediction(game)
         print("newgame")
@@ -627,5 +628,11 @@ def PlayGame():
                 pygame.draw.circle(screen,(0,0,100),((botpredictionloc%5)*50 + 55, (botpredictionloc%11)*50+30),10)
             pygame.display.flip()
             lastState = pygame.mouse.get_pressed()[0]
-PlayGame()
+#PlayGame() #comment out if not training manually since its generally slow
+
+
+# In[ ]:
+
+
+population.saveModels(numToSave=len(population.Models))
 
