@@ -8,3 +8,5 @@
 * Yes we know that a tree search could be used but this is an interesting appplication and great place for many aspiring coders to test different networks and theories
 * It is recommended when beginning training to pretrain all your models using the method "trainAgainstStone()" to avoid the initial 
 * Feel free to use the **pretrained models**, which as of 5/16/2019 have a **50-70% win-rate**
+### Other information
+* As of 5/16/2019 there seems to be a local minimum that is preventing the nn from passing the 70% threshold and getting higher win-rates this may be from the simplicity of the network or lack of intuative design, but help is appreciated
