@@ -1,6 +1,6 @@
 ## blockthepignn - Neural Network to beat Block the Pig on Cool Math Games
 ### Prerequisites
-* Keras(up-to-date)
+* Keras(up-to-date) rollback version if softmax is requiring an axis that is a bug and makes the version unusuable.
 * imports may require pip install
 * Jupyter notebook is recommended if you plan on contributing to the project
 ### Setup
